@@ -125,6 +125,9 @@ export default function QuizArea() {
   const isFirstStep = currentStepIndex === 0
   const isLastStep = currentStepIndex === steps.length - 1
   const selectedId = currentStep ? selectedOptionByStep[currentStep.id] : undefined
+  const isNextDisabled =
+    (currentStep?.id === '4' && breakSecondsLeft > 0) ||
+    (currentStep && currentStep.options.length > 0 && selectedId === undefined)
 
   const setSelected = (stepId: string, optionId: string) => {
     setSelectedOptionByStep((prev) => ({ ...prev, [stepId]: optionId }))
@@ -410,7 +413,7 @@ export default function QuizArea() {
                       {currentStep.question}
                     </h3>
                     <div className="space-y-3">
-                      {currentStep.options.map((opt, idx) => {
+                      {currentStep.options.map((opt) => {
                         const key = `${currentStep.id}:${opt.id}`
                         const showAskAhmed = askAhmedKey === key
                         const showYashrafni = yashrafniKey === key
@@ -561,9 +564,9 @@ export default function QuizArea() {
               <motion.button
                 type="button"
                 onClick={goNext}
-                disabled={currentStep?.id === '4' && breakSecondsLeft > 0}
-                whileHover={currentStep?.id === '4' && breakSecondsLeft > 0 ? {} : { scale: 1.05 }}
-                whileTap={currentStep?.id === '4' && breakSecondsLeft > 0 ? {} : { scale: 0.95 }}
+                disabled={isNextDisabled}
+                whileHover={isNextDisabled ? {} : { scale: 1.05 }}
+                whileTap={isNextDisabled ? {} : { scale: 0.95 }}
                 className="px-5 py-2 rounded-xl bg-rose-500 text-white font-semibold hover:bg-rose-600 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLastStep ? 'خلصت! 🎉' : 'قدام 👈'}
